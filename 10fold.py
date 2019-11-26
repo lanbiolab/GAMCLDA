@@ -68,9 +68,6 @@ for i in range(0, len(one_list), split):
         new_lncrna_disease_matrix[index[0], index[1]] = 0
     roc_lncrna_disease_matrix = new_lncrna_disease_matrix + lncrna_disease_matrix
 
-    train_matrix_file = str(i) + "times_need_lncran_disease_tr.h5"
-    with h5py.File(train_matrix_file, 'w') as hf:
-        hf.create_dataset("rating", data=new_lncrna_disease_matrix)
 
     rel_matrix = new_lncrna_disease_matrix
     row_n = rel_matrix.shape[0]
@@ -146,27 +143,6 @@ mean_cross_fpr = np.mean(fpr_arr, axis=0)
 mean_cross_recall = np.mean(recall_arr, axis=0)
 mean_cross_precision = np.mean(precision_arr, axis=0)
 mean_cross_accuracy = np.mean(accuracy_arr,axis=0)
-file = open('mean_cross_recall.txt', 'w')
-for i in mean_cross_recall:
-    file.write(str(i) + '\n')
-file.close()
-file = open('mean_cross_precision.txt', 'w')
-for i in mean_cross_precision:
-    file.write(str(i) + '\n')
-file.close()
-file = open('mean_cross_tpr.txt', 'w')
-for i in mean_cross_tpr:
-    file.write(str(i) + "\n")
-file.close()
-
-file = open('mean_cross_fpr.txt', 'w')
-for i in mean_cross_fpr:
-    file.write(str(i) + "\n")
-file.close()
-file=open('mean_cross_accuracy.txt','w')
-for i in mean_cross_accuracy:
-      file.write(str(i)+"\n")
-file.close()
 
 roc_auc = np.trapz(mean_cross_tpr, mean_cross_fpr)
 

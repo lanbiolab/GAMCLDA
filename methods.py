@@ -2,6 +2,7 @@ from __future__ import division
 from __future__ import print_function
 
 import torch
+import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
 import scipy.sparse as sp
@@ -70,8 +71,11 @@ def preprocess_graph_L(adj):
 
 def loss_function(pre_adj, adj):
     adj = torch.Tensor(adj)
-    class_weight = Variable(torch.FloatTensor([1, 200]))
+    adj_shape = adj.size()
+    init_weight = nn.init.kaiming_uniform_(torch.Tensor(adj_shape[0], adj_shape[1]))
+    class_weight = Variable(torch.FloatTensor([1, 500]))
     weight = class_weight[adj.long()]
+    weight = weight.mul(torch.abs(init_weight))
     #loss_fn = torch.nn.BCEWithLogitsLoss(weight)
     loss_fn = torch.nn.BCELoss(weight)
     return loss_fn(pre_adj, adj)
