@@ -45,6 +45,7 @@ all_recall = []
 all_precision = []
 all_accuracy = []
 
+# hidden layer
 hidden1 = 256 #32
 hidden2 = 64
 hidden3 = 32 #16
@@ -138,6 +139,7 @@ recall_arr = np.array(all_recall)
 precision_arr = np.array(all_precision)
 accuracy_arr = np.array(all_accuracy)
 
+#tpr, fpr, recall, precision, accuracy
 mean_cross_tpr = np.mean(tpr_arr, axis=0)  # axis=0
 mean_cross_fpr = np.mean(fpr_arr, axis=0)
 mean_cross_recall = np.mean(recall_arr, axis=0)
@@ -149,7 +151,7 @@ roc_auc = np.trapz(mean_cross_tpr, mean_cross_fpr)
 plt.plot(mean_cross_fpr, mean_cross_tpr, label='mean ROC=%0.4f' % roc_auc)
 plt.xlabel('False Positive Rate')
 plt.ylabel('True Positive Rate')
-plt.legend(loc=0)  # 要加上这一句才能显示label
+plt.legend(loc=0)  
 plt.savefig("roc3.png")
 print("runtime over, now is :")
 print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())))
