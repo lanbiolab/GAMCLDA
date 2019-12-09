@@ -75,7 +75,7 @@ def loss_function(pre_adj, adj):
     adj = torch.Tensor(adj)
     adj_shape = adj.size()
     # init_weight = nn.init.kaiming_uniform_(torch.Tensor(adj_shape[0], adj_shape[1]))
-    class_weight = Variable(torch.FloatTensor([1, 200])) # the proportion of positive and negative samples, is a manual adjustment parameters
+    class_weight = Variable(torch.FloatTensor([1, 200])) # the proportion of positive and negative samples, which is a manual adjustment parameters
     weight = class_weight[adj.long()]
     # weight = weight.mul(torch.abs(init_weight))
     # loss_fn = torch.nn.BCEWithLogitsLoss(weight)
