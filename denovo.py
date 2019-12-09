@@ -9,6 +9,7 @@ from models import Decoder
 import itertools
 
 
+# hidden layers
 hidden1 = 256 #
 hidden2 = 64 #128
 hidden3 = 32 #16
@@ -99,13 +100,6 @@ for i in range(412):
     sort_index = np.argsort(-score_matrix[:,i],axis=0)
     sorted_lncrna_disease_row = roc_lncrna_disease_matrix[:,i][sort_index]
 
-    fileName1 = "denovo" + str(i) + "times.txt"
-    file = open(fileName1, 'w')
-
-    for p in score_matrix:
-        k = '\t'.join([str(j) for j in p])
-        file.write(k + "\n")
-    file.close()
     tpr_list = []
     fpr_list = []
 
@@ -146,32 +140,13 @@ recall_arr = np.array(all_recall)
 precision_arr = np.array(all_precision)
 accuracy_arr = np.array(all_accuracy)
 
+# tpr, fpr, recall, precision, accuracy
 mean_denovo_recall = np.mean(recall_arr,axis=0)
 mean_denovo_precision = np.mean(precision_arr,axis=0)
 
 mean_denovo_tpr = np.mean(tpr_arr,axis=0)
 mean_denovo_fpr = np.mean(fpr_arr,axis=0)
 mean_denovo_accuracy = np.mean(accuracy_arr,axis=0)
-file=open('mean_denovo_tpr.txt','w')
-for i in mean_denovo_tpr:
-    file.write(str(i)+'\n')
-file.close()
-file=open('mean_denovo_fpr.txt','w')
-for i in mean_denovo_fpr:
-    file.write(str(i)+'\n')
-file.close()
-file = open('mean_denovo_recall.txt', 'w')
-for i in mean_denovo_recall:
-    file.write(str(i) + '\n')
-file.close()
-file = open('mean_denovo_precision.txt', 'w')
-for i in mean_denovo_precision:
-    file.write(str(i) + '\n')
-file.close()
-file=open('mean_denovo_accuracy.txt','w')
-for i in mean_denovo_accuracy:
-      file.write(str(i)+"\n")
-file.close()
 
 roc_auc = metrics.auc(mean_denovo_fpr, mean_denovo_tpr)
 plt.plot(mean_denovo_fpr,mean_denovo_tpr, label='mean ROC=%0.4f'%roc_auc)
