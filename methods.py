@@ -13,6 +13,7 @@ import pandas as pd
 from torch.autograd import Variable
 
 
+# from the gcn paper
 def globally_normalize_bipartite_adjacency(adjacencies, verbose=False, symmetric=True):
     """ Globally Normalizes set of bipartite adjacency matrices """
 
@@ -43,6 +44,7 @@ def globally_normalize_bipartite_adjacency(adjacencies, verbose=False, symmetric
     return adj_norm
 
     # Reconstruction + KL divergence losses summed over all elements and batch
+    
 def sparse_to_tuple(sparse_mx):
     if not sp.isspmatrix_coo(sparse_mx):
         sparse_mx = sparse_mx.tocoo()
@@ -50,7 +52,6 @@ def sparse_to_tuple(sparse_mx):
     values = sparse_mx.data
     shape = sparse_mx.shape
     return coords, values, shape
-
 
 def preprocess_graph(adj):
     adj = sp.coo_matrix(adj)
@@ -69,28 +70,29 @@ def preprocess_graph_L(adj):
     adj_normalized = sp.csc_matrix.todense(adj_normalized)
     return adj_normalized
 
+#loss function  (predict, label)
 def loss_function(pre_adj, adj):
     adj = torch.Tensor(adj)
     adj_shape = adj.size()
-    init_weight = nn.init.kaiming_uniform_(torch.Tensor(adj_shape[0], adj_shape[1]))
-    class_weight = Variable(torch.FloatTensor([1, 500]))
+    # init_weight = nn.init.kaiming_uniform_(torch.Tensor(adj_shape[0], adj_shape[1]))
+    class_weight = Variable(torch.FloatTensor([1, 200])) # the proportion of positive and negative samples, is a manual adjustment parameters
     weight = class_weight[adj.long()]
-    weight = weight.mul(torch.abs(init_weight))
-    #loss_fn = torch.nn.BCEWithLogitsLoss(weight)
+    # weight = weight.mul(torch.abs(init_weight))
+    # loss_fn = torch.nn.BCEWithLogitsLoss(weight)
     loss_fn = torch.nn.BCELoss(weight)
     return loss_fn(pre_adj, adj)
 
-
+# no use
 def dis_loss(pred, label):
     fn = torch.nn.BCELoss()
     loss = fn(pred, label)
     return loss
 
+# train method
+def train(epoch, label, encoder, decoder, discriminator, device, optimizer, lncx, disx, adj, dis_optimizer, row, col):
 
-def train(epoch, label, encoder, decoder, discriminator, device, gen_optimizer, lncx, disx, adj, dis_optimizer, row, col):
-
-    # train generator
-    gen_optimizer.zero_grad()
+    # train
+    optimizer.zero_grad()
     z = encoder(lncx, disx, adj)
     row_n = len(row)
     col_n = len(col)
@@ -103,7 +105,7 @@ def train(epoch, label, encoder, decoder, discriminator, device, gen_optimizer, 
 
     en_loss = loss_function(pred, label)
     en_loss.backward()
-    gen_optimizer.step()
+    optimizer.step()
 
     return pred, en_loss
 
@@ -112,4 +114,4 @@ def gaussiansim (a,b, sigma=1):
     t = (a-b)**2
     temp = -sum(t)
 
-    return np.exp(temp/ (2 * sigma**2))
+    return np.exp(temp/ (2 * sigma**2)) # the denominator view as a constant, which is equivalent to the sum function in our paper 
