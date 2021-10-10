@@ -1,5 +1,5 @@
 # GAMCLDA
-The implementation of “Inferring LncRNA-disease Associations Based On Graph Autoencoder Matrix Completion”, Ximin Wu,Wei Lan,Qingfeng Chen,Yi Dong,Wei Peng,Jin Liu,Jianxin Wang
+The implementation of “Inferring LncRNA-disease Associations Based On Graph Autoencoder Matrix Completion”, Ximin Wu, Wei Lan, Qingfeng Chen, Yi Dong, Jin Liu, Wei Peng. Computational biology and chemistry, 87:107282, 2020
 
 ## Requirement
 
